@@ -1,0 +1,1029 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Flood Prepared — Maribyrnong</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #0d1b2e;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    /* ── Phone frame ─────────────────────────────────────── */
+    .device {
+      width: 390px;
+      height: 844px;
+      background: #f4f6f9;
+      border-radius: 54px;
+      border: 12px solid #1c1c1e;
+      box-shadow:
+        0 0 0 1px #3a3a3c,
+        0 40px 100px rgba(0,0,0,0.7),
+        inset 0 0 0 1px rgba(255,255,255,0.05);
+      position: relative;
+      overflow: hidden;
+    }
+    /* notch */
+    .device::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 50%;
+      transform: translateX(-50%);
+      width: 130px; height: 34px;
+      background: #1c1c1e;
+      border-radius: 0 0 20px 20px;
+      z-index: 999;
+    }
+
+    /* ── Screens ─────────────────────────────────────────── */
+    .screen {
+      position: absolute;
+      inset: 0;
+      display: none;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    .screen.active { display: flex; }
+
+    /* scrollable body area */
+    .screen-body {
+      flex: 1;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      padding-bottom: 70px;
+    }
+    .screen-body::-webkit-scrollbar { display: none; }
+
+    /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+       LANGUAGE SELECTION
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+    #screen-lang {
+      background: linear-gradient(160deg, #003566 0%, #0077b6 60%, #00b4d8 100%);
+    }
+
+    .lang-hero {
+      padding: 60px 24px 24px;
+      text-align: center;
+    }
+    .lang-hero .app-icon {
+      width: 80px; height: 80px;
+      background: rgba(255,255,255,0.15);
+      border-radius: 22px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 42px;
+      margin-bottom: 16px;
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255,255,255,0.25);
+    }
+    .lang-hero h1 { color: #fff; font-size: 26px; font-weight: 800; letter-spacing: -0.5px; }
+    .lang-hero p  { color: rgba(255,255,255,0.65); font-size: 13px; margin-top: 4px; }
+
+    .lang-prompt {
+      color: rgba(255,255,255,0.85);
+      font-size: 13px;
+      font-weight: 600;
+      text-align: center;
+      margin: 8px 24px 16px;
+      letter-spacing: 0.3px;
+    }
+
+    .lang-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      padding: 0 20px 32px;
+    }
+
+    .lang-btn {
+      background: rgba(255,255,255,0.12);
+      backdrop-filter: blur(12px);
+      border: 1.5px solid rgba(255,255,255,0.22);
+      border-radius: 18px;
+      padding: 18px 10px 14px;
+      cursor: pointer;
+      display: flex; flex-direction: column; align-items: center; gap: 6px;
+      transition: transform 0.15s, background 0.15s;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .lang-btn:active { transform: scale(0.96); background: rgba(255,255,255,0.22); }
+    .lang-btn .flag  { font-size: 34px; line-height: 1; }
+    .lang-btn .lname { color: #fff; font-size: 14px; font-weight: 700; }
+    .lang-btn .lnat  { color: rgba(255,255,255,0.6); font-size: 11px; }
+
+    /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+       SHARED HEADER + BOTTOM NAV
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+    .top-bar {
+      padding: 44px 20px 16px;
+      background: linear-gradient(135deg, #003566, #0077b6);
+      color: #fff;
+      flex-shrink: 0;
+    }
+    .top-bar-row { display: flex; align-items: flex-start; justify-content: space-between; }
+    .top-bar h2 { font-size: 20px; font-weight: 800; letter-spacing: -0.3px; }
+    .top-bar .sub { font-size: 11px; opacity: 0.7; margin-top: 2px; }
+    .badge-warn {
+      background: #ff6b35;
+      color: #fff;
+      font-size: 10px;
+      font-weight: 800;
+      padding: 4px 10px;
+      border-radius: 20px;
+      letter-spacing: 0.3px;
+      margin-top: 2px;
+      flex-shrink: 0;
+    }
+    .badge-ok {
+      background: #2ecc71;
+      color: #fff;
+      font-size: 10px;
+      font-weight: 800;
+      padding: 4px 10px;
+      border-radius: 20px;
+    }
+
+    .bottom-nav {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 70px;
+      background: #fff;
+      border-top: 1px solid #e8e8ea;
+      display: flex;
+      align-items: stretch;
+      z-index: 100;
+      padding-bottom: 8px;
+    }
+    .nav-tab {
+      flex: 1;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      gap: 3px; cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .nav-tab .ni { font-size: 22px; }
+    .nav-tab .nl { font-size: 9px; color: #aaa; font-weight: 600; letter-spacing: 0.2px; }
+    .nav-tab.active .nl { color: #0077b6; }
+    .nav-tab.active .ni { filter: none; }
+
+    /* back button */
+    .back-btn {
+      display: inline-flex; align-items: center; gap: 6px;
+      color: rgba(255,255,255,0.85); font-size: 13px; font-weight: 600;
+      cursor: pointer; padding: 6px 0 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .back-btn:active { opacity: 0.6; }
+
+    /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+       HOME SCREEN
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+    .alert-strip {
+      margin: 14px 16px 0;
+      background: #fff8e6;
+      border: 1.5px solid #f0a500;
+      border-radius: 14px;
+      padding: 12px 14px;
+      display: flex; align-items: center; gap: 12px;
+    }
+    .alert-strip .ai { font-size: 26px; flex-shrink: 0; }
+    .alert-strip h4 { font-size: 13px; font-weight: 700; color: #7a5500; }
+    .alert-strip p  { font-size: 11px; color: #9a7010; margin-top: 2px; }
+
+    .section-label {
+      font-size: 11px; font-weight: 800; color: #aaa;
+      letter-spacing: 0.8px; text-transform: uppercase;
+      padding: 18px 16px 8px;
+    }
+
+    .card-grid {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 12px; padding: 0 16px;
+    }
+
+    .card {
+      background: #fff;
+      border-radius: 18px;
+      padding: 18px 14px 14px;
+      cursor: pointer;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.07);
+      transition: transform 0.15s;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .card:active { transform: scale(0.97); }
+    .card .ci { font-size: 30px; margin-bottom: 10px; }
+    .card .ct { font-size: 13px; font-weight: 700; color: #1c1c1e; }
+    .card .cs { font-size: 10px; color: #999; margin-top: 3px; }
+    .card.accent { background: linear-gradient(135deg, #003566, #0077b6); }
+    .card.accent .ct, .card.accent .cs { color: rgba(255,255,255,0.9); }
+
+    /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+       MAP SCREEN
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+    .map-placeholder {
+      margin: 14px 16px 0;
+      background: #dce8f0;
+      border-radius: 18px;
+      height: 210px;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .map-placeholder .map-grid {
+      position: absolute; inset: 0;
+      background-image:
+        linear-gradient(rgba(0,119,182,0.08) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,119,182,0.08) 1px, transparent 1px);
+      background-size: 30px 30px;
+    }
+    .map-placeholder .river {
+      position: absolute;
+      width: 100%; height: 18px;
+      background: rgba(0,119,182,0.35);
+      top: 45%;
+      transform: rotate(-3deg) translateY(-50%);
+    }
+    .map-legend { display: flex; gap: 8px; margin: 10px 16px 0; flex-wrap: wrap; }
+    .map-legend .dot {
+      display: flex; align-items: center; gap: 5px;
+      font-size: 10px; color: #555; font-weight: 600;
+    }
+    .dot-circle {
+      width: 10px; height: 10px; border-radius: 50%;
+    }
+
+    .risk-list { padding: 0 16px; margin-top: 14px; display: flex; flex-direction: column; gap: 10px; }
+    .risk-row {
+      background: #fff;
+      border-radius: 14px;
+      padding: 14px;
+      display: flex; align-items: center; gap: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    }
+    .risk-row .ri { font-size: 22px; }
+    .risk-row .rt { font-size: 13px; font-weight: 700; color: #1c1c1e; }
+    .risk-row .rs { font-size: 11px; color: #888; margin-top: 2px; }
+    .risk-pill {
+      margin-left: auto; font-size: 10px; font-weight: 800;
+      padding: 4px 10px; border-radius: 20px; flex-shrink: 0;
+    }
+    .risk-high { background: #fde; color: #c0392b; }
+    .risk-med  { background: #fef3d0; color: #d68910; }
+    .risk-low  { background: #d5f5e3; color: #1e8449; }
+
+    /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+       LIVE DATA SCREEN
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+    .gauge-card {
+      background: #fff;
+      border-radius: 18px;
+      padding: 20px;
+      margin: 14px 16px 0;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.07);
+    }
+    .gauge-label { font-size: 11px; font-weight: 800; color: #aaa; letter-spacing: 0.5px; text-transform: uppercase; }
+    .gauge-val { font-size: 36px; font-weight: 800; color: #0077b6; margin: 4px 0; }
+    .gauge-unit { font-size: 14px; font-weight: 400; color: #888; }
+    .gauge-bar-wrap { background: #f0f0f0; border-radius: 8px; height: 10px; margin-top: 10px; overflow: hidden; }
+    .gauge-bar { height: 100%; border-radius: 8px; background: linear-gradient(90deg, #0077b6, #00b4d8); }
+    .gauge-status { font-size: 12px; font-weight: 600; margin-top: 6px; }
+
+    .update-row {
+      display: flex; align-items: center; justify-content: space-between;
+      background: #fff; border-radius: 14px;
+      padding: 14px; margin: 10px 16px 0;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+      font-size: 13px;
+    }
+    .update-row .ur-l { font-weight: 600; color: #1c1c1e; }
+    .update-row .ur-r { color: #0077b6; font-weight: 700; }
+
+    /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+       SUPPLY PACK SCREEN
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+    .supply-hero {
+      margin: 14px 16px 0;
+      background: linear-gradient(135deg, #003566, #0077b6);
+      border-radius: 18px; padding: 20px;
+      color: #fff; display: flex; align-items: center; gap: 14px;
+    }
+    .supply-hero .shi { font-size: 44px; }
+    .supply-hero h3 { font-size: 16px; font-weight: 800; }
+    .supply-hero p  { font-size: 11px; opacity: 0.75; margin-top: 4px; }
+
+    .checklist { padding: 0 16px; margin-top: 14px; display: flex; flex-direction: column; gap: 8px; }
+    .check-item {
+      background: #fff; border-radius: 14px;
+      padding: 14px 16px;
+      display: flex; align-items: center; gap: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .check-item .ck-box {
+      width: 22px; height: 22px; border-radius: 50%;
+      border: 2px solid #ddd; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 12px;
+      transition: all 0.2s;
+    }
+    .check-item.done .ck-box { background: #2ecc71; border-color: #2ecc71; color: #fff; }
+    .check-item .ck-text { font-size: 13px; font-weight: 600; color: #1c1c1e; }
+    .check-item.done .ck-text { text-decoration: line-through; color: #aaa; }
+
+    /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+       SETTINGS SCREEN
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+    .settings-section { padding: 0 16px; margin-top: 14px; display: flex; flex-direction: column; gap: 8px; }
+    .setting-row {
+      background: #fff; border-radius: 14px;
+      padding: 14px 16px;
+      display: flex; align-items: center; gap: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .setting-row .si { font-size: 22px; }
+    .setting-row .st { font-size: 13px; font-weight: 600; color: #1c1c1e; }
+    .setting-row .ss { font-size: 11px; color: #aaa; margin-top: 2px; }
+    .setting-row .arr { margin-left: auto; color: #ccc; font-size: 16px; }
+
+    .lang-change-grid {
+      display: none;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      padding: 0 16px;
+      margin-top: 10px;
+    }
+    .lang-change-grid.open { display: grid; }
+    .lc-btn {
+      background: #f0f4f8; border-radius: 12px;
+      padding: 12px 8px; display: flex; flex-direction: column;
+      align-items: center; gap: 4px; cursor: pointer;
+      border: 2px solid transparent;
+      transition: all 0.15s;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .lc-btn.selected { border-color: #0077b6; background: #e6f2fb; }
+    .lc-btn .lf { font-size: 26px; }
+    .lc-btn .ln { font-size: 11px; font-weight: 700; color: #333; }
+
+    /* hotlines */
+    .hotline-list { padding: 0 16px; margin-top: 14px; display: flex; flex-direction: column; gap: 8px; }
+    .hotline-row {
+      background: #fff; border-radius: 14px;
+      padding: 14px 16px;
+      display: flex; align-items: center; gap: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    }
+    .hotline-row .hi { font-size: 22px; }
+    .hotline-row .ht { font-size: 13px; font-weight: 700; color: #1c1c1e; }
+    .hotline-row .hn { font-size: 12px; color: #0077b6; font-weight: 700; margin-top: 2px; }
+    .call-btn {
+      margin-left: auto;
+      background: #0077b6; color: #fff;
+      font-size: 11px; font-weight: 700;
+      padding: 6px 12px; border-radius: 20px;
+      cursor: pointer; flex-shrink: 0;
+    }
+  </style>
+</head>
+<body>
+
+<div class="device">
+
+  <!-- ══════════════════════════════════════════════
+       SCREEN: Language Selection
+  ══════════════════════════════════════════════ -->
+  <div class="screen active" id="screen-lang">
+    <div style="flex:1; overflow-y:auto; -webkit-overflow-scrolling:touch;">
+      <div class="lang-hero">
+        <div class="app-icon">🌊</div>
+        <h1>Flood Prepared</h1>
+        <p>Maribyrnong City Council</p>
+      </div>
+      <div class="lang-prompt">Select your language / Chọn ngôn ngữ / 选择语言</div>
+      <div class="lang-grid">
+        <div class="lang-btn" onclick="setLang('en')">
+          <span class="flag">🇦🇺</span>
+          <span class="lname">English</span>
+          <span class="lnat">English</span>
+        </div>
+        <div class="lang-btn" onclick="setLang('vi')">
+          <span class="flag">🇻🇳</span>
+          <span class="lname">Vietnamese</span>
+          <span class="lnat">Tiếng Việt</span>
+        </div>
+        <div class="lang-btn" onclick="setLang('zh')">
+          <span class="flag">🇨🇳</span>
+          <span class="lname">Chinese</span>
+          <span class="lnat">中文</span>
+        </div>
+        <div class="lang-btn" onclick="setLang('hi')">
+          <span class="flag">🇮🇳</span>
+          <span class="lname">Hindi</span>
+          <span class="lnat">हिन्दी</span>
+        </div>
+        <div class="lang-btn" onclick="setLang('so')">
+          <span class="flag">🇸🇴</span>
+          <span class="lname">Somali</span>
+          <span class="lnat">Soomaali</span>
+        </div>
+        <div class="lang-btn" onclick="setLang('tl')">
+          <span class="flag">🇵🇭</span>
+          <span class="lname">Filipino</span>
+          <span class="lnat">Filipino</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════
+       SCREEN: Home
+  ══════════════════════════════════════════════ -->
+  <div class="screen" id="screen-home">
+    <div class="top-bar">
+      <div class="top-bar-row">
+        <div>
+          <h2 data-i18n="home_title">Flood Prepared</h2>
+          <div class="sub">Maribyrnong City Council</div>
+        </div>
+        <div class="badge-warn" data-i18n="home_risk">⚠️ MODERATE</div>
+      </div>
+    </div>
+    <div class="screen-body">
+      <div class="alert-strip">
+        <div class="ai">🌧️</div>
+        <div>
+          <h4 data-i18n="home_alert_title">Flood Watch Active</h4>
+          <p data-i18n="home_alert_desc">Maribyrnong River — moderate risk. Stay informed.</p>
+        </div>
+      </div>
+      <div class="section-label" data-i18n="home_quick">QUICK ACCESS</div>
+      <div class="card-grid">
+        <div class="card accent" onclick="goScreen('screen-map')">
+          <div class="ci">🗺️</div>
+          <div class="ct" data-i18n="card_map">Flood Map</div>
+          <div class="cs" data-i18n="card_map_s">Risk zones & evacuation</div>
+        </div>
+        <div class="card" onclick="goScreen('screen-live')">
+          <div class="ci">📡</div>
+          <div class="ct" data-i18n="card_live">Live Data</div>
+          <div class="cs" data-i18n="card_live_s">Rainfall & water level</div>
+        </div>
+        <div class="card" onclick="goScreen('screen-supply')">
+          <div class="ci">📦</div>
+          <div class="ct" data-i18n="card_supply">Supply Pack</div>
+          <div class="cs" data-i18n="card_supply_s">Your emergency kit</div>
+        </div>
+        <div class="card" onclick="goScreen('screen-settings')">
+          <div class="ci">📞</div>
+          <div class="ct" data-i18n="card_contacts">Emergency</div>
+          <div class="cs" data-i18n="card_contacts_s">Hotlines & SES</div>
+        </div>
+      </div>
+    </div>
+    <div class="bottom-nav">
+      <div class="nav-tab active" onclick="goScreen('screen-home')">
+        <span class="ni">🏠</span><span class="nl" data-i18n="nav_home">Home</span>
+      </div>
+      <div class="nav-tab" onclick="goScreen('screen-map')">
+        <span class="ni">🗺️</span><span class="nl" data-i18n="nav_map">Map</span>
+      </div>
+      <div class="nav-tab" onclick="goScreen('screen-supply')">
+        <span class="ni">📦</span><span class="nl" data-i18n="nav_pack">Pack</span>
+      </div>
+      <div class="nav-tab" onclick="goScreen('screen-settings')">
+        <span class="ni">⚙️</span><span class="nl" data-i18n="nav_settings">Settings</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════
+       SCREEN: Map
+  ══════════════════════════════════════════════ -->
+  <div class="screen" id="screen-map">
+    <div class="top-bar">
+      <div class="back-btn" onclick="goScreen('screen-home')">← <span data-i18n="back">Back</span></div>
+      <div class="top-bar-row" style="margin-top:6px">
+        <h2 data-i18n="map_title">Flood Map</h2>
+        <div class="badge-warn" data-i18n="map_updated">Updated live</div>
+      </div>
+    </div>
+    <div class="screen-body">
+      <div class="map-placeholder">
+        <div class="map-grid"></div>
+        <div class="river"></div>
+        <!-- fake pins -->
+        <div style="position:absolute;top:28%;left:30%;font-size:22px;" title="High risk">🔴</div>
+        <div style="position:absolute;top:55%;left:60%;font-size:22px;" title="Pickup point">📦</div>
+        <div style="position:absolute;top:65%;left:25%;font-size:22px;" title="Evacuation">🟢</div>
+        <div style="position:absolute;top:20%;left:65%;font-size:18px;">🔴</div>
+        <div style="position:absolute;bottom:16px;right:16px;background:#fff;border-radius:8px;padding:4px 10px;font-size:11px;font-weight:700;color:#0077b6;box-shadow:0 2px 6px rgba(0,0,0,0.15);">Maribyrnong River</div>
+      </div>
+      <div class="map-legend">
+        <div class="dot"><div class="dot-circle" style="background:#e74c3c"></div><span data-i18n="leg_high">High risk</span></div>
+        <div class="dot"><div class="dot-circle" style="background:#f39c12"></div><span data-i18n="leg_med">Medium risk</span></div>
+        <div class="dot"><div class="dot-circle" style="background:#2ecc71"></div><span data-i18n="leg_low">Pickup point</span></div>
+      </div>
+      <div class="section-label" data-i18n="map_zones">RISK ZONES</div>
+      <div class="risk-list">
+        <div class="risk-row">
+          <div class="ri">🏘️</div>
+          <div><div class="rt">Footscray</div><div class="rs" data-i18n="zone_near">0.4 km from river</div></div>
+          <div class="risk-pill risk-high" data-i18n="risk_high">HIGH</div>
+        </div>
+        <div class="risk-row">
+          <div class="ri">🏘️</div>
+          <div><div class="rt">Maribyrnong</div><div class="rs" data-i18n="zone_river">Along river bend</div></div>
+          <div class="risk-pill risk-high" data-i18n="risk_high2">HIGH</div>
+        </div>
+        <div class="risk-row">
+          <div class="ri">🏘️</div>
+          <div><div class="rt">Sunshine North</div><div class="rs" data-i18n="zone_far">1.2 km from river</div></div>
+          <div class="risk-pill risk-med" data-i18n="risk_med">MEDIUM</div>
+        </div>
+        <div class="risk-row">
+          <div class="ri">📦</div>
+          <div><div class="rt" data-i18n="pickup_title">Nearest Pickup Point</div><div class="rs">Footscray Community Centre</div></div>
+          <div class="risk-pill risk-low" data-i18n="pickup_dist">0.8 km</div>
+        </div>
+      </div>
+    </div>
+    <div class="bottom-nav">
+      <div class="nav-tab" onclick="goScreen('screen-home')"><span class="ni">🏠</span><span class="nl" data-i18n="nav_home">Home</span></div>
+      <div class="nav-tab active" onclick="goScreen('screen-map')"><span class="ni">🗺️</span><span class="nl" data-i18n="nav_map">Map</span></div>
+      <div class="nav-tab" onclick="goScreen('screen-supply')"><span class="ni">📦</span><span class="nl" data-i18n="nav_pack">Pack</span></div>
+      <div class="nav-tab" onclick="goScreen('screen-settings')"><span class="ni">⚙️</span><span class="nl" data-i18n="nav_settings">Settings</span></div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════
+       SCREEN: Live Data
+  ══════════════════════════════════════════════ -->
+  <div class="screen" id="screen-live">
+    <div class="top-bar">
+      <div class="back-btn" onclick="goScreen('screen-home')">← <span data-i18n="back">Back</span></div>
+      <div class="top-bar-row" style="margin-top:6px">
+        <h2 data-i18n="live_title">Live Data</h2>
+        <div class="badge-warn">● LIVE</div>
+      </div>
+    </div>
+    <div class="screen-body">
+      <div class="gauge-card">
+        <div class="gauge-label" data-i18n="live_wl">WATER LEVEL</div>
+        <div class="gauge-val">3.2 <span class="gauge-unit">m</span></div>
+        <div class="gauge-bar-wrap"><div class="gauge-bar" style="width:64%; background:linear-gradient(90deg,#f39c12,#e74c3c)"></div></div>
+        <div class="gauge-status" style="color:#d68910" data-i18n="live_wl_status">⚠️ Above normal — monitor closely</div>
+      </div>
+      <div class="gauge-card" style="margin-top:10px; margin-left:16px; margin-right:16px;">
+        <div class="gauge-label" data-i18n="live_rain">RAINFALL (24h)</div>
+        <div class="gauge-val">42 <span class="gauge-unit">mm</span></div>
+        <div class="gauge-bar-wrap"><div class="gauge-bar" style="width:42%"></div></div>
+        <div class="gauge-status" style="color:#0077b6" data-i18n="live_rain_status">Moderate — within expected range</div>
+      </div>
+      <div class="section-label" data-i18n="live_readings">RECENT READINGS</div>
+      <div class="update-row"><span class="ur-l" data-i18n="live_t1">Water level trend</span><span class="ur-r" data-i18n="live_t1v">↑ Rising</span></div>
+      <div class="update-row"><span class="ur-l" data-i18n="live_t2">Peak forecast</span><span class="ur-r">~4.1 m</span></div>
+      <div class="update-row"><span class="ur-l" data-i18n="live_t3">Last updated</span><span class="ur-r" id="live-time">—</span></div>
+    </div>
+    <div class="bottom-nav">
+      <div class="nav-tab" onclick="goScreen('screen-home')"><span class="ni">🏠</span><span class="nl" data-i18n="nav_home">Home</span></div>
+      <div class="nav-tab" onclick="goScreen('screen-map')"><span class="ni">🗺️</span><span class="nl" data-i18n="nav_map">Map</span></div>
+      <div class="nav-tab" onclick="goScreen('screen-supply')"><span class="ni">📦</span><span class="nl" data-i18n="nav_pack">Pack</span></div>
+      <div class="nav-tab" onclick="goScreen('screen-settings')"><span class="ni">⚙️</span><span class="nl" data-i18n="nav_settings">Settings</span></div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════
+       SCREEN: Supply Pack
+  ══════════════════════════════════════════════ -->
+  <div class="screen" id="screen-supply">
+    <div class="top-bar">
+      <div class="back-btn" onclick="goScreen('screen-home')">← <span data-i18n="back">Back</span></div>
+      <div class="top-bar-row" style="margin-top:6px">
+        <h2 data-i18n="supply_title">Supply Pack</h2>
+      </div>
+    </div>
+    <div class="screen-body">
+      <div class="supply-hero">
+        <div class="shi">📦</div>
+        <div>
+          <h3 data-i18n="supply_hero_t">Your Emergency Kit</h3>
+          <p data-i18n="supply_hero_s">Tap items to mark as ready</p>
+        </div>
+      </div>
+      <div class="section-label" data-i18n="supply_checklist">CHECKLIST</div>
+      <div class="checklist">
+        <div class="check-item" onclick="toggleCheck(this)">
+          <div class="ck-box"></div>
+          <div class="ck-text" data-i18n="item_map">📋 Flood information booklet</div>
+        </div>
+        <div class="check-item" onclick="toggleCheck(this)">
+          <div class="ck-box"></div>
+          <div class="ck-text" data-i18n="item_map2">🗺️ Printed evacuation map</div>
+        </div>
+        <div class="check-item" onclick="toggleCheck(this)">
+          <div class="ck-box"></div>
+          <div class="ck-text" data-i18n="item_water">💧 Water (3 days supply)</div>
+        </div>
+        <div class="check-item" onclick="toggleCheck(this)">
+          <div class="ck-box"></div>
+          <div class="ck-text" data-i18n="item_food">🍱 Non-perishable food</div>
+        </div>
+        <div class="check-item" onclick="toggleCheck(this)">
+          <div class="ck-box"></div>
+          <div class="ck-text" data-i18n="item_torch">🔦 Torch & batteries</div>
+        </div>
+        <div class="check-item" onclick="toggleCheck(this)">
+          <div class="ck-box"></div>
+          <div class="ck-text" data-i18n="item_radio">📻 Battery/hand-crank radio</div>
+        </div>
+        <div class="check-item" onclick="toggleCheck(this)">
+          <div class="ck-box"></div>
+          <div class="ck-text" data-i18n="item_first">🩹 First aid kit</div>
+        </div>
+        <div class="check-item" onclick="toggleCheck(this)">
+          <div class="ck-box"></div>
+          <div class="ck-text" data-i18n="item_docs">📄 Important documents</div>
+        </div>
+        <div class="check-item" onclick="toggleCheck(this)">
+          <div class="ck-box"></div>
+          <div class="ck-text" data-i18n="item_meds">💊 Medications (7 days)</div>
+        </div>
+        <div class="check-item" onclick="toggleCheck(this)">
+          <div class="ck-box"></div>
+          <div class="ck-text" data-i18n="item_mascot">🐻 Community mascot card</div>
+        </div>
+      </div>
+    </div>
+    <div class="bottom-nav">
+      <div class="nav-tab" onclick="goScreen('screen-home')"><span class="ni">🏠</span><span class="nl" data-i18n="nav_home">Home</span></div>
+      <div class="nav-tab" onclick="goScreen('screen-map')"><span class="ni">🗺️</span><span class="nl" data-i18n="nav_map">Map</span></div>
+      <div class="nav-tab active" onclick="goScreen('screen-supply')"><span class="ni">📦</span><span class="nl" data-i18n="nav_pack">Pack</span></div>
+      <div class="nav-tab" onclick="goScreen('screen-settings')"><span class="ni">⚙️</span><span class="nl" data-i18n="nav_settings">Settings</span></div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════
+       SCREEN: Settings / Emergency
+  ══════════════════════════════════════════════ -->
+  <div class="screen" id="screen-settings">
+    <div class="top-bar">
+      <div class="back-btn" onclick="goScreen('screen-home')">← <span data-i18n="back">Back</span></div>
+      <div class="top-bar-row" style="margin-top:6px">
+        <h2 data-i18n="settings_title">Settings</h2>
+      </div>
+    </div>
+    <div class="screen-body">
+      <div class="section-label" data-i18n="settings_emergency">EMERGENCY CONTACTS</div>
+      <div class="hotline-list">
+        <div class="hotline-row">
+          <div class="hi">🚨</div>
+          <div><div class="ht">SES (State Emergency)</div><div class="hn">132 500</div></div>
+          <div class="call-btn">Call</div>
+        </div>
+        <div class="hotline-row">
+          <div class="hi">🚒</div>
+          <div><div class="ht" data-i18n="h_fire">Fire / Ambulance</div><div class="hn">000</div></div>
+          <div class="call-btn">Call</div>
+        </div>
+        <div class="hotline-row">
+          <div class="hi">🏛️</div>
+          <div><div class="ht" data-i18n="h_council">Maribyrnong Council</div><div class="hn">9688 0200</div></div>
+          <div class="call-btn">Call</div>
+        </div>
+        <div class="hotline-row">
+          <div class="hi">🌊</div>
+          <div><div class="ht">VicEmergency Hotline</div><div class="hn">1800 226 226</div></div>
+          <div class="call-btn">Call</div>
+        </div>
+      </div>
+
+      <div class="section-label" data-i18n="settings_lang_section">LANGUAGE</div>
+      <div class="settings-section">
+        <div class="setting-row" onclick="toggleLangPicker()">
+          <div class="si">🌐</div>
+          <div>
+            <div class="st" data-i18n="settings_lang">Change Language</div>
+            <div class="ss" id="current-lang-display">English</div>
+          </div>
+          <div class="arr" id="lang-arr">›</div>
+        </div>
+      </div>
+      <div class="lang-change-grid" id="lang-picker">
+        <div class="lc-btn" onclick="setLang('en')" data-lang="en"><span class="lf">🇦🇺</span><span class="ln">English</span></div>
+        <div class="lc-btn" onclick="setLang('vi')" data-lang="vi"><span class="lf">🇻🇳</span><span class="ln">Tiếng Việt</span></div>
+        <div class="lc-btn" onclick="setLang('zh')" data-lang="zh"><span class="lf">🇨🇳</span><span class="ln">中文</span></div>
+        <div class="lc-btn" onclick="setLang('hi')" data-lang="hi"><span class="lf">🇮🇳</span><span class="ln">हिन्दी</span></div>
+        <div class="lc-btn" onclick="setLang('so')" data-lang="so"><span class="lf">🇸🇴</span><span class="ln">Soomaali</span></div>
+        <div class="lc-btn" onclick="setLang('tl')" data-lang="tl"><span class="lf">🇵🇭</span><span class="ln">Filipino</span></div>
+      </div>
+
+      <div class="section-label" data-i18n="settings_app">APP</div>
+      <div class="settings-section">
+        <div class="setting-row" onclick="window.open('qr.html','_blank')">
+          <div class="si">📲</div>
+          <div>
+            <div class="st" data-i18n="settings_qr">Share / QR Code</div>
+            <div class="ss" data-i18n="settings_qr_s">Print or share this app</div>
+          </div>
+          <div class="arr">›</div>
+        </div>
+      </div>
+    </div>
+    <div class="bottom-nav">
+      <div class="nav-tab" onclick="goScreen('screen-home')"><span class="ni">🏠</span><span class="nl" data-i18n="nav_home">Home</span></div>
+      <div class="nav-tab" onclick="goScreen('screen-map')"><span class="ni">🗺️</span><span class="nl" data-i18n="nav_map">Map</span></div>
+      <div class="nav-tab" onclick="goScreen('screen-supply')"><span class="ni">📦</span><span class="nl" data-i18n="nav_pack">Pack</span></div>
+      <div class="nav-tab active" onclick="goScreen('screen-settings')"><span class="ni">⚙️</span><span class="nl" data-i18n="nav_settings">Settings</span></div>
+    </div>
+  </div>
+
+</div><!-- /device -->
+
+<script>
+/* ── Translations ─────────────────────────────────────── */
+const T = {
+  en: {
+    home_title:'Flood Prepared', home_risk:'⚠️ MODERATE',
+    home_alert_title:'Flood Watch Active', home_alert_desc:'Maribyrnong River — moderate risk. Stay informed.',
+    home_quick:'QUICK ACCESS',
+    card_map:'Flood Map', card_map_s:'Risk zones & evacuation',
+    card_live:'Live Data', card_live_s:'Rainfall & water level',
+    card_supply:'Supply Pack', card_supply_s:'Your emergency kit',
+    card_contacts:'Emergency', card_contacts_s:'Hotlines & SES',
+    nav_home:'Home', nav_map:'Map', nav_pack:'Pack', nav_settings:'Settings',
+    back:'Back',
+    map_title:'Flood Map', map_updated:'Updated live',
+    leg_high:'High risk', leg_med:'Medium risk', leg_low:'Pickup point',
+    map_zones:'RISK ZONES',
+    zone_near:'0.4 km from river', zone_river:'Along river bend', zone_far:'1.2 km from river',
+    risk_high:'HIGH', risk_high2:'HIGH', risk_med:'MEDIUM',
+    pickup_title:'Nearest Pickup', pickup_dist:'0.8 km',
+    live_title:'Live Data',
+    live_wl:'WATER LEVEL', live_wl_status:'⚠️ Above normal — monitor closely',
+    live_rain:'RAINFALL (24h)', live_rain_status:'Moderate — within expected range',
+    live_readings:'RECENT READINGS',
+    live_t1:'Water level trend', live_t1v:'↑ Rising', live_t2:'Peak forecast', live_t3:'Last updated',
+    supply_title:'Supply Pack', supply_hero_t:'Your Emergency Kit', supply_hero_s:'Tap items to mark as ready',
+    supply_checklist:'CHECKLIST',
+    item_map:'📋 Flood information booklet', item_map2:'🗺️ Printed evacuation map',
+    item_water:'💧 Water (3 days supply)', item_food:'🍱 Non-perishable food',
+    item_torch:'🔦 Torch & batteries', item_radio:'📻 Battery/hand-crank radio',
+    item_first:'🩹 First aid kit', item_docs:'📄 Important documents',
+    item_meds:'💊 Medications (7 days)', item_mascot:'🐻 Community mascot card',
+    settings_title:'Settings', settings_emergency:'EMERGENCY CONTACTS',
+    h_fire:'Fire / Ambulance', h_council:'Maribyrnong Council',
+    settings_lang_section:'LANGUAGE', settings_lang:'Change Language',
+    settings_app:'APP', settings_qr:'Share / QR Code', settings_qr_s:'Print or share this app',
+    lang_display:'English',
+  },
+  vi: {
+    home_title:'Phòng Chống Lũ', home_risk:'⚠️ TRUNG BÌNH',
+    home_alert_title:'Cảnh Báo Lũ', home_alert_desc:'Sông Maribyrnong — nguy cơ trung bình. Hãy cập nhật thông tin.',
+    home_quick:'TRUY CẬP NHANH',
+    card_map:'Bản Đồ Lũ', card_map_s:'Vùng nguy hiểm & sơ tán',
+    card_live:'Dữ Liệu Trực Tiếp', card_live_s:'Lượng mưa & mực nước',
+    card_supply:'Gói Cứu Trợ', card_supply_s:'Bộ khẩn cấp của bạn',
+    card_contacts:'Khẩn Cấp', card_contacts_s:'Đường dây nóng & SES',
+    nav_home:'Trang Chủ', nav_map:'Bản Đồ', nav_pack:'Gói', nav_settings:'Cài Đặt',
+    back:'Quay Lại',
+    map_title:'Bản Đồ Lũ', map_updated:'Cập nhật trực tiếp',
+    leg_high:'Nguy cơ cao', leg_med:'Nguy cơ trung bình', leg_low:'Điểm lấy hàng',
+    map_zones:'VÙNG NGUY HIỂM',
+    zone_near:'Cách sông 0.4 km', zone_river:'Dọc theo khúc sông', zone_far:'Cách sông 1.2 km',
+    risk_high:'CAO', risk_high2:'CAO', risk_med:'TRUNG BÌNH',
+    pickup_title:'Điểm Lấy Hàng Gần Nhất', pickup_dist:'0.8 km',
+    live_title:'Dữ Liệu Trực Tiếp',
+    live_wl:'MỰC NƯỚC', live_wl_status:'⚠️ Trên mức bình thường — theo dõi chặt chẽ',
+    live_rain:'LƯỢNG MƯA (24h)', live_rain_status:'Trung bình — trong phạm vi dự kiến',
+    live_readings:'THÔNG SỐ GẦN ĐÂY',
+    live_t1:'Xu hướng mực nước', live_t1v:'↑ Đang tăng', live_t2:'Dự báo đỉnh', live_t3:'Cập nhật lần cuối',
+    supply_title:'Gói Cứu Trợ', supply_hero_t:'Bộ Khẩn Cấp Của Bạn', supply_hero_s:'Nhấn vào mục để đánh dấu đã chuẩn bị',
+    supply_checklist:'DANH SÁCH',
+    item_map:'📋 Sách thông tin lũ lụt', item_map2:'🗺️ Bản đồ sơ tán in sẵn',
+    item_water:'💧 Nước (3 ngày)', item_food:'🍱 Thực phẩm không dễ hỏng',
+    item_torch:'🔦 Đèn pin & pin', item_radio:'📻 Radio chạy pin',
+    item_first:'🩹 Bộ sơ cứu', item_docs:'📄 Tài liệu quan trọng',
+    item_meds:'💊 Thuốc (7 ngày)', item_mascot:'🐻 Thẻ linh vật cộng đồng',
+    settings_title:'Cài Đặt', settings_emergency:'LIÊN HỆ KHẨN CẤP',
+    h_fire:'Cứu hỏa / Cấp cứu', h_council:'Hội Đồng Maribyrnong',
+    settings_lang_section:'NGÔN NGỮ', settings_lang:'Thay Đổi Ngôn Ngữ',
+    settings_app:'ỨNG DỤNG', settings_qr:'Chia Sẻ / Mã QR', settings_qr_s:'In hoặc chia sẻ ứng dụng này',
+    lang_display:'Tiếng Việt',
+  },
+  zh: {
+    home_title:'洪水备灾', home_risk:'⚠️ 中度警报',
+    home_alert_title:'洪水预警', home_alert_desc:'Maribyrnong河 — 中度风险，请保持关注。',
+    home_quick:'快捷入口',
+    card_map:'洪水地图', card_map_s:'风险区域与疏散路线',
+    card_live:'实时数据', card_live_s:'降雨量和水位',
+    card_supply:'物资包', card_supply_s:'您的应急包',
+    card_contacts:'紧急联系', card_contacts_s:'热线与SES',
+    nav_home:'首页', nav_map:'地图', nav_pack:'物资', nav_settings:'设置',
+    back:'返回',
+    map_title:'洪水地图', map_updated:'实时更新',
+    leg_high:'高风险', leg_med:'中度风险', leg_low:'领取点',
+    map_zones:'风险区域',
+    zone_near:'距河流0.4公里', zone_river:'沿河弯曲处', zone_far:'距河流1.2公里',
+    risk_high:'高', risk_high2:'高', risk_med:'中',
+    pickup_title:'最近领取点', pickup_dist:'0.8公里',
+    live_title:'实时数据',
+    live_wl:'水位', live_wl_status:'⚠️ 高于正常水平 — 请密切关注',
+    live_rain:'降雨量（24小时）', live_rain_status:'中等 — 在预期范围内',
+    live_readings:'近期读数',
+    live_t1:'水位趋势', live_t1v:'↑ 上涨', live_t2:'峰值预报', live_t3:'最后更新',
+    supply_title:'物资包', supply_hero_t:'您的应急包', supply_hero_s:'点击项目标记为已准备',
+    supply_checklist:'清单',
+    item_map:'📋 洪水信息手册', item_map2:'🗺️ 打印疏散地图',
+    item_water:'💧 饮用水（3天份）', item_food:'🍱 非易腐食品',
+    item_torch:'🔦 手电筒及电池', item_radio:'📻 电池收音机',
+    item_first:'🩹 急救包', item_docs:'📄 重要文件',
+    item_meds:'💊 药品（7天份）', item_mascot:'🐻 社区吉祥物卡片',
+    settings_title:'设置', settings_emergency:'紧急联系方式',
+    h_fire:'消防/急救', h_council:'Maribyrnong市政府',
+    settings_lang_section:'语言', settings_lang:'更改语言',
+    settings_app:'应用', settings_qr:'分享/二维码', settings_qr_s:'打印或分享此应用',
+    lang_display:'中文',
+  },
+  hi: {
+    home_title:'बाढ़ तैयारी', home_risk:'⚠️ मध्यम',
+    home_alert_title:'बाढ़ चेतावनी', home_alert_desc:'Maribyrnong नदी — मध्यम जोखिम। सूचित रहें।',
+    home_quick:'त्वरित पहुंच',
+    card_map:'बाढ़ मानचित्र', card_map_s:'जोखिम क्षेत्र और निकासी',
+    card_live:'लाइव डेटा', card_live_s:'वर्षा और जल स्तर',
+    card_supply:'आपूर्ति पैक', card_supply_s:'आपका आपातकालीन किट',
+    card_contacts:'आपातकाल', card_contacts_s:'हॉटलाइन और SES',
+    nav_home:'होम', nav_map:'मानचित्र', nav_pack:'पैक', nav_settings:'सेटिंग्स',
+    back:'वापस',
+    map_title:'बाढ़ मानचित्र', map_updated:'लाइव अपडेट',
+    leg_high:'उच्च जोखिम', leg_med:'मध्यम जोखिम', leg_low:'संग्रह बिंदु',
+    map_zones:'जोखिम क्षेत्र',
+    zone_near:'नदी से 0.4 किमी', zone_river:'नदी मोड़ के साथ', zone_far:'नदी से 1.2 किमी',
+    risk_high:'उच्च', risk_high2:'उच्च', risk_med:'मध्यम',
+    pickup_title:'निकटतम संग्रह बिंदु', pickup_dist:'0.8 किमी',
+    live_title:'लाइव डेटा',
+    live_wl:'जल स्तर', live_wl_status:'⚠️ सामान्य से अधिक — निगरानी करें',
+    live_rain:'वर्षा (24 घंटे)', live_rain_status:'मध्यम — अपेक्षित सीमा में',
+    live_readings:'हालिया रीडिंग',
+    live_t1:'जल स्तर प्रवृत्ति', live_t1v:'↑ बढ़ रहा है', live_t2:'चरम पूर्वानुमान', live_t3:'अंतिम अपडेट',
+    supply_title:'आपूर्ति पैक', supply_hero_t:'आपका आपातकालीन किट', supply_hero_s:'तैयार के रूप में चिह्नित करने के लिए टैप करें',
+    supply_checklist:'चेकलिस्ट',
+    item_map:'📋 बाढ़ सूचना पुस्तिका', item_map2:'🗺️ मुद्रित निकासी मानचित्र',
+    item_water:'💧 पानी (3 दिन की आपूर्ति)', item_food:'🍱 गैर-नाशवान भोजन',
+    item_torch:'🔦 टॉर्च और बैटरी', item_radio:'📻 बैटरी रेडियो',
+    item_first:'🩹 प्राथमिक चिकित्सा किट', item_docs:'📄 महत्वपूर्ण दस्तावेज़',
+    item_meds:'💊 दवाइयां (7 दिन)', item_mascot:'🐻 सामुदायिक शुभंकर कार्ड',
+    settings_title:'सेटिंग्स', settings_emergency:'आपातकालीन संपर्क',
+    h_fire:'अग्निशमन / एम्बुलेंस', h_council:'Maribyrnong परिषद',
+    settings_lang_section:'भाषा', settings_lang:'भाषा बदलें',
+    settings_app:'ऐप', settings_qr:'साझा करें / QR कोड', settings_qr_s:'इस ऐप को प्रिंट या शेयर करें',
+    lang_display:'हिन्दी',
+  },
+  so: {
+    home_title:'Diyaarinta Daadadka', home_risk:'⚠️ DHEXDHEXAAD',
+    home_alert_title:'Dignaanshaha Daadka', home_alert_desc:'Webiga Maribyrnong — khatarta dhexdhexaadka. La soco.',
+    home_quick:'GALITAANKA DEGDEGA',
+    card_map:'Khariidadda Daadadka', card_map_s:'Goobaha halista & jidadka',
+    card_live:'Xogta Tooska ah', card_live_s:'Roobka & heerka biyaha',
+    card_supply:'Xirmada Sahayda', card_supply_s:'Kiidkaaga xaaladaha deg-deg',
+    card_contacts:'Xaaladda Deg-deg', card_contacts_s:'Lambaryada & SES',
+    nav_home:'Hoyga', nav_map:'Khariidad', nav_pack:'Xirmo', nav_settings:'Dejinta',
+    back:'Dib u noqo',
+    map_title:'Khariidadda Daadadka', map_updated:'Cusbooneysiinta tooska',
+    leg_high:'Khatarta sare', leg_med:'Khatarta dhexdhexaad', leg_low:'Goobta qaadista',
+    map_zones:'GOOBAHA HALISTA',
+    zone_near:'0.4 km webiga', zone_river:'Xagga goobtii webiga', zone_far:'1.2 km webiga',
+    risk_high:'SARE', risk_high2:'SARE', risk_med:'DHEX',
+    pickup_title:'Goobta Qaadista Ugu Dhow', pickup_dist:'0.8 km',
+    live_title:'Xogta Tooska ah',
+    live_wl:'HEERKA BIYAHA', live_wl_status:'⚠️ Kor ka jira caadiga — si dhow u soco',
+    live_rain:'ROOBKA (24 saac)', live_rain_status:'Dhexdhexaad — xadka la filayay',
+    live_readings:'AKHRINTA DHOWAAN',
+    live_t1:'Xilliga heerka biyaha', live_t1v:'↑ Korodhaya', live_t2:'Saadaasha ugu sarreysa', live_t3:'Markii ugu dambeysay la cusbooneysiiyay',
+    supply_title:'Xirmada Sahayda', supply_hero_t:'Kiidkaaga Xaaladaha Deg-deg', supply_hero_s:'Riix walxaha si aad u calaamadiso diyaar',
+    supply_checklist:'LIISKA HUBINTA',
+    item_map:'📋 Buugga macluumaadka daadka', item_map2:'🗺️ Khariidadda barakacidda',
+    item_water:'💧 Biyo (3 maalmood)', item_food:'🍱 Cunto aan xumaan',
+    item_torch:'🔦 Toosh & baytariyo', item_radio:'📻 Raydiyow baytari',
+    item_first:'🩹 Kiidka gargaarka hore', item_docs:'📄 Dokumentiyada muhiimka',
+    item_meds:'💊 Daawooyinka (7 maalmood)', item_mascot:'🐻 Kaarka calaamadda bulshada',
+    settings_title:'Dejinta', settings_emergency:'XIRIIRKA XAALADDA DEG-DEG',
+    h_fire:'Dab demis / Ambalaas', h_council:'Golaha Maribyrnong',
+    settings_lang_section:'LUUQADDA', settings_lang:'Beddel Luuqadda',
+    settings_app:'ABKA', settings_qr:'La wadaag / QR Koodhka', settings_qr_s:'Daabac ama la wadaag abkan',
+    lang_display:'Soomaali',
+  },
+  tl: {
+    home_title:'Handa sa Baha', home_risk:'⚠️ KATAMTAMAN',
+    home_alert_title:'Babala sa Baha', home_alert_desc:'Ilog Maribyrnong — katamtamang panganib. Manatiling may alam.',
+    home_quick:'MABILIS NA ACCESS',
+    card_map:'Mapa ng Baha', card_map_s:'Mga zone ng panganib at ruta',
+    card_live:'Live na Data', card_live_s:'Ulan at antas ng tubig',
+    card_supply:'Supply Pack', card_supply_s:'Iyong emergency kit',
+    card_contacts:'Emergency', card_contacts_s:'Mga hotline at SES',
+    nav_home:'Home', nav_map:'Mapa', nav_pack:'Pack', nav_settings:'Settings',
+    back:'Bumalik',
+    map_title:'Mapa ng Baha', map_updated:'Live na update',
+    leg_high:'Mataas na panganib', leg_med:'Katamtamang panganib', leg_low:'Pickup point',
+    map_zones:'MGA RISK ZONE',
+    zone_near:'0.4 km mula sa ilog', zone_river:'Sa kurbada ng ilog', zone_far:'1.2 km mula sa ilog',
+    risk_high:'MATAAS', risk_high2:'MATAAS', risk_med:'KATAMTAMAN',
+    pickup_title:'Pinakamalapit na Pickup', pickup_dist:'0.8 km',
+    live_title:'Live na Data',
+    live_wl:'ANTAS NG TUBIG', live_wl_status:'⚠️ Higit sa normal — subaybayan nang mabuti',
+    live_rain:'ULAN (24h)', live_rain_status:'Katamtaman — nasa inaasahang hanay',
+    live_readings:'MGA KAMAKAILANG PAGBABASA',
+    live_t1:'Trend ng antas ng tubig', live_t1v:'↑ Tumataas', live_t2:'Hula sa pinakamataas', live_t3:'Huling na-update',
+    supply_title:'Supply Pack', supply_hero_t:'Ang Iyong Emergency Kit', supply_hero_s:'I-tap ang mga item upang markahan bilang handa',
+    supply_checklist:'CHECKLIST',
+    item_map:'📋 Polyeto ng impormasyon sa baha', item_map2:'🗺️ Naka-print na mapa ng evacuation',
+    item_water:'💧 Tubig (3 araw na supply)', item_food:'🍱 Hindi nabubulok na pagkain',
+    item_torch:'🔦 Flashlight at baterya', item_radio:'📻 Battery na radyo',
+    item_first:'🩹 First aid kit', item_docs:'📄 Mahahalagang dokumento',
+    item_meds:'💊 Mga gamot (7 araw)', item_mascot:'🐻 Kard ng community mascot',
+    settings_title:'Settings', settings_emergency:'MGA EMERGENCY CONTACT',
+    h_fire:'Sunog / Ambulansya', h_council:'Konseho ng Maribyrnong',
+    settings_lang_section:'WIKA', settings_lang:'Baguhin ang Wika',
+    settings_app:'APP', settings_qr:'Ibahagi / QR Code', settings_qr_s:'I-print o ibahagi ang app na ito',
+    lang_display:'Filipino',
+  },
+};
+
+const LANG_NAMES = { en:'English', vi:'Tiếng Việt', zh:'中文', hi:'हिन्दी', so:'Soomaali', tl:'Filipino' };
+
+let currentLang = 'en';
+
+function setLang(lang) {
+  currentLang = lang;
+  localStorage.setItem('floodAppLang', lang);
+  applyTranslations();
+  updateLangPicker();
+  document.getElementById('current-lang-display').textContent = LANG_NAMES[lang];
+  goScreen('screen-home');
+}
+
+function applyTranslations() {
+  const t = T[currentLang];
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.getAttribute('data-i18n');
+    if (t[key] !== undefined) el.textContent = t[key];
+  });
+}
+
+function goScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+function toggleCheck(el) {
+  el.classList.toggle('done');
+  el.querySelector('.ck-box').textContent = el.classList.contains('done') ? '✓' : '';
+}
+
+let langPickerOpen = false;
+function toggleLangPicker() {
+  langPickerOpen = !langPickerOpen;
+  document.getElementById('lang-picker').classList.toggle('open', langPickerOpen);
+  document.getElementById('lang-arr').textContent = langPickerOpen ? '∨' : '›';
+}
+
+function updateLangPicker() {
+  document.querySelectorAll('.lc-btn').forEach(btn => {
+    btn.classList.toggle('selected', btn.dataset.lang === currentLang);
+  });
+}
+
+function updateClock() {
+  const now = new Date();
+  document.getElementById('live-time').textContent =
+    now.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
+}
+
+/* ── Init ─────────────────────────────────────────────── */
+window.addEventListener('DOMContentLoaded', () => {
+  updateClock();
+  setInterval(updateClock, 30000);
+
+  const saved = localStorage.getItem('floodAppLang');
+  if (saved && T[saved]) {
+    currentLang = saved;
+    applyTranslations();
+    updateLangPicker();
+    document.getElementById('current-lang-display').textContent = LANG_NAMES[saved];
+    goScreen('screen-home');
+  }
+});
+</script>
+</body>
+</html>
