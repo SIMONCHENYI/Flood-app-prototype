@@ -635,43 +635,63 @@
       <div class="checklist">
         <div class="check-item" onclick="toggleCheck(this)">
           <div class="ck-box"></div>
-          <div class="ck-text" data-i18n="item_map">📋 Flood information booklet</div>
+          <div class="ck-text" data-i18n="item_water">💧 Bottled water (3 L per person/day)</div>
         </div>
         <div class="check-item" onclick="toggleCheck(this)">
           <div class="ck-box"></div>
-          <div class="ck-text" data-i18n="item_map2">🗺️ Printed evacuation map</div>
+          <div class="ck-text" data-i18n="item_food">🍱 Non-perishable food (nuts, cans, dried fruit)</div>
         </div>
         <div class="check-item" onclick="toggleCheck(this)">
           <div class="ck-box"></div>
-          <div class="ck-text" data-i18n="item_water">💧 Water (3 days supply)</div>
+          <div class="ck-text" data-i18n="item_radio">📻 Battery-operated radio</div>
         </div>
         <div class="check-item" onclick="toggleCheck(this)">
           <div class="ck-box"></div>
-          <div class="ck-text" data-i18n="item_food">🍱 Non-perishable food</div>
+          <div class="ck-text" data-i18n="item_powerbank">📱 Mobile phone & power bank</div>
         </div>
         <div class="check-item" onclick="toggleCheck(this)">
           <div class="ck-box"></div>
-          <div class="ck-text" data-i18n="item_torch">🔦 Torch & batteries</div>
+          <div class="ck-text" data-i18n="item_torch">🔦 Flashlight with extra batteries</div>
         </div>
         <div class="check-item" onclick="toggleCheck(this)">
           <div class="ck-box"></div>
-          <div class="ck-text" data-i18n="item_radio">📻 Battery/hand-crank radio</div>
+          <div class="ck-text" data-i18n="item_candle">🕯️ Candles and matches</div>
         </div>
         <div class="check-item" onclick="toggleCheck(this)">
           <div class="ck-box"></div>
-          <div class="ck-text" data-i18n="item_first">🩹 First aid kit</div>
+          <div class="ck-text" data-i18n="item_first">🩹 First aid kit with instructions</div>
         </div>
         <div class="check-item" onclick="toggleCheck(this)">
           <div class="ck-box"></div>
-          <div class="ck-text" data-i18n="item_docs">📄 Important documents</div>
+          <div class="ck-text" data-i18n="item_blanket">🛏️ Blankets</div>
         </div>
         <div class="check-item" onclick="toggleCheck(this)">
           <div class="ck-box"></div>
-          <div class="ck-text" data-i18n="item_meds">💊 Medications (7 days)</div>
+          <div class="ck-text" data-i18n="item_whistle">📯 Whistle</div>
         </div>
         <div class="check-item" onclick="toggleCheck(this)">
           <div class="ck-box"></div>
-          <div class="ck-text" data-i18n="item_mascot">🐻 Community mascot card</div>
+          <div class="ck-text" data-i18n="item_cash">💵 Cash</div>
+        </div>
+        <div class="check-item" onclick="toggleCheck(this)">
+          <div class="ck-box"></div>
+          <div class="ck-text" data-i18n="item_tools">🔧 Tools (hammer, saw, nippers)</div>
+        </div>
+        <div class="check-item" onclick="toggleCheck(this)">
+          <div class="ck-box"></div>
+          <div class="ck-text" data-i18n="item_hygiene">🧴 Hygiene items (gel, wipes, toothbrush…)</div>
+        </div>
+        <div class="check-item" onclick="toggleCheck(this)">
+          <div class="ck-box"></div>
+          <div class="ck-text" data-i18n="item_id">🪪 Copies of IDs & important numbers</div>
+        </div>
+        <div class="check-item" onclick="toggleCheck(this)">
+          <div class="ck-box"></div>
+          <div class="ck-text" data-i18n="item_keys">🔑 Spare keys (house & car)</div>
+        </div>
+        <div class="check-item" onclick="toggleCheck(this)">
+          <div class="ck-box"></div>
+          <div class="ck-text" data-i18n="item_personal">🎒 Personal items</div>
         </div>
       </div>
     </div>
@@ -787,10 +807,14 @@ const T = {
     supply_title:'Supply Pack', supply_hero_t:'Your Emergency Kit', supply_hero_s:'Tap items to mark as ready',
     supply_checklist:'CHECKLIST',
     item_map:'📋 Flood information booklet', item_map2:'🗺️ Printed evacuation map',
-    item_water:'💧 Water (3 days supply)', item_food:'🍱 Non-perishable food',
-    item_torch:'🔦 Torch & batteries', item_radio:'📻 Battery/hand-crank radio',
-    item_first:'🩹 First aid kit', item_docs:'📄 Important documents',
-    item_meds:'💊 Medications (7 days)', item_mascot:'🐻 Community mascot card',
+    item_water:'💧 Bottled water (3 L per person/day)', item_food:'🍱 Non-perishable food (nuts, cans, dried fruit)',
+    item_radio:'📻 Battery-operated radio', item_powerbank:'📱 Mobile phone & power bank',
+    item_torch:'🔦 Flashlight with extra batteries', item_candle:'🕯️ Candles and matches',
+    item_first:'🩹 First aid kit with instructions', item_blanket:'🛏️ Blankets',
+    item_whistle:'📯 Whistle', item_cash:'💵 Cash',
+    item_tools:'🔧 Tools (hammer, saw, nippers)', item_hygiene:'🧴 Hygiene items (gel, wipes, toothbrush…)',
+    item_id:'🪪 Copies of IDs & important numbers', item_keys:'🔑 Spare keys (house & car)',
+    item_personal:'🎒 Personal items',
     settings_title:'Settings', settings_emergency:'EMERGENCY CONTACTS',
     h_fire:'Fire / Ambulance', h_council:'Maribyrnong Council',
     settings_lang_section:'LANGUAGE', settings_lang:'Change Language',
@@ -821,10 +845,14 @@ const T = {
     supply_title:'Gói Cứu Trợ', supply_hero_t:'Bộ Khẩn Cấp Của Bạn', supply_hero_s:'Nhấn vào mục để đánh dấu đã chuẩn bị',
     supply_checklist:'DANH SÁCH',
     item_map:'📋 Sách thông tin lũ lụt', item_map2:'🗺️ Bản đồ sơ tán in sẵn',
-    item_water:'💧 Nước (3 ngày)', item_food:'🍱 Thực phẩm không dễ hỏng',
-    item_torch:'🔦 Đèn pin & pin', item_radio:'📻 Radio chạy pin',
-    item_first:'🩹 Bộ sơ cứu', item_docs:'📄 Tài liệu quan trọng',
-    item_meds:'💊 Thuốc (7 ngày)', item_mascot:'🐻 Thẻ linh vật cộng đồng',
+    item_water:'💧 Nước đóng chai (3 lít/người/ngày)', item_food:'🍱 Thực phẩm không dễ hỏng (hạt, đồ hộp, trái khô)',
+    item_radio:'📻 Radio chạy pin', item_powerbank:'📱 Điện thoại & pin dự phòng',
+    item_torch:'🔦 Đèn pin & pin dự phòng', item_candle:'🕯️ Nến và diêm',
+    item_first:'🩹 Bộ sơ cứu kèm hướng dẫn', item_blanket:'🛏️ Chăn mền',
+    item_whistle:'📯 Còi', item_cash:'💵 Tiền mặt',
+    item_tools:'🔧 Dụng cụ (búa, cưa, kìm)', item_hygiene:'🧴 Vệ sinh cá nhân (gel, khăn ướt, bàn chải…)',
+    item_id:'🪪 Bản sao giấy tờ & số điện thoại quan trọng', item_keys:'🔑 Chìa khoá dự phòng (nhà & xe)',
+    item_personal:'🎒 Vật dụng cá nhân',
     settings_title:'Cài Đặt', settings_emergency:'LIÊN HỆ KHẨN CẤP',
     h_fire:'Cứu hỏa / Cấp cứu', h_council:'Hội Đồng Maribyrnong',
     settings_lang_section:'NGÔN NGỮ', settings_lang:'Thay Đổi Ngôn Ngữ',
@@ -855,10 +883,14 @@ const T = {
     supply_title:'物资包', supply_hero_t:'您的应急包', supply_hero_s:'点击项目标记为已准备',
     supply_checklist:'清单',
     item_map:'📋 洪水信息手册', item_map2:'🗺️ 打印疏散地图',
-    item_water:'💧 饮用水（3天份）', item_food:'🍱 非易腐食品',
-    item_torch:'🔦 手电筒及电池', item_radio:'📻 电池收音机',
-    item_first:'🩹 急救包', item_docs:'📄 重要文件',
-    item_meds:'💊 药品（7天份）', item_mascot:'🐻 社区吉祥物卡片',
+    item_water:'💧 瓶装水（每人每天3升）', item_food:'🍱 非易腐食品（坚果、罐头、干果）',
+    item_radio:'📻 电池收音机', item_powerbank:'📱 手机及充电宝',
+    item_torch:'🔦 手电筒及备用电池', item_candle:'🕯️ 蜡烛和火柴',
+    item_first:'🩹 附说明书的急救包', item_blanket:'🛏️ 毛毯',
+    item_whistle:'📯 哨子', item_cash:'💵 现金',
+    item_tools:'🔧 工具（锤子、锯子、钳子）', item_hygiene:'🧴 个人卫生用品（消毒液、湿巾、牙刷…）',
+    item_id:'🪪 身份证件复印件及重要电话', item_keys:'🔑 备用钥匙（住所和车）',
+    item_personal:'🎒 个人物品',
     settings_title:'设置', settings_emergency:'紧急联系方式',
     h_fire:'消防/急救', h_council:'Maribyrnong市政府',
     settings_lang_section:'语言', settings_lang:'更改语言',
@@ -889,10 +921,14 @@ const T = {
     supply_title:'आपूर्ति पैक', supply_hero_t:'आपका आपातकालीन किट', supply_hero_s:'तैयार के रूप में चिह्नित करने के लिए टैप करें',
     supply_checklist:'चेकलिस्ट',
     item_map:'📋 बाढ़ सूचना पुस्तिका', item_map2:'🗺️ मुद्रित निकासी मानचित्र',
-    item_water:'💧 पानी (3 दिन की आपूर्ति)', item_food:'🍱 गैर-नाशवान भोजन',
-    item_torch:'🔦 टॉर्च और बैटरी', item_radio:'📻 बैटरी रेडियो',
-    item_first:'🩹 प्राथमिक चिकित्सा किट', item_docs:'📄 महत्वपूर्ण दस्तावेज़',
-    item_meds:'💊 दवाइयां (7 दिन)', item_mascot:'🐻 सामुदायिक शुभंकर कार्ड',
+    item_water:'💧 बोतलबंद पानी (3 लीटर/व्यक्ति/दिन)', item_food:'🍱 गैर-नाशवान भोजन (मेवे, डिब्बाबंद, सूखे फल)',
+    item_radio:'📻 बैटरी रेडियो', item_powerbank:'📱 मोबाइल फोन व पावर बैंक',
+    item_torch:'🔦 टॉर्च व अतिरिक्त बैटरी', item_candle:'🕯️ मोमबत्ती और माचिस',
+    item_first:'🩹 प्राथमिक चिकित्सा किट (निर्देश सहित)', item_blanket:'🛏️ कंबल',
+    item_whistle:'📯 सीटी', item_cash:'💵 नकद पैसे',
+    item_tools:'🔧 उपकरण (हथौड़ा, आरी, प्लायर)', item_hygiene:'🧴 स्वच्छता सामग्री (जेल, वेट वाइप्स, टूथब्रश…)',
+    item_id:'🪪 पहचान पत्र की प्रति व महत्वपूर्ण नंबर', item_keys:'🔑 अतिरिक्त चाबियाँ (घर व कार)',
+    item_personal:'🎒 व्यक्तिगत सामान',
     settings_title:'सेटिंग्स', settings_emergency:'आपातकालीन संपर्क',
     h_fire:'अग्निशमन / एम्बुलेंस', h_council:'Maribyrnong परिषद',
     settings_lang_section:'भाषा', settings_lang:'भाषा बदलें',
@@ -923,10 +959,14 @@ const T = {
     supply_title:'Xirmada Sahayda', supply_hero_t:'Kiidkaaga Xaaladaha Deg-deg', supply_hero_s:'Riix walxaha si aad u calaamadiso diyaar',
     supply_checklist:'LIISKA HUBINTA',
     item_map:'📋 Buugga macluumaadka daadka', item_map2:'🗺️ Khariidadda barakacidda',
-    item_water:'💧 Biyo (3 maalmood)', item_food:'🍱 Cunto aan xumaan',
-    item_torch:'🔦 Toosh & baytariyo', item_radio:'📻 Raydiyow baytari',
-    item_first:'🩹 Kiidka gargaarka hore', item_docs:'📄 Dokumentiyada muhiimka',
-    item_meds:'💊 Daawooyinka (7 maalmood)', item_mascot:'🐻 Kaarka calaamadda bulshada',
+    item_water:'💧 Biyo dhalada (3 litir/qof/maalin)', item_food:'🍱 Cunto aan xumaan (hudhun, qasacad, miro engegan)',
+    item_radio:'📻 Raydiyow baytari', item_powerbank:'📱 Telefon & baytari dheeraad ah',
+    item_torch:'🔦 Toosh & baytariyo dheeraad ah', item_candle:'🕯️ Shamaco iyo kibrit',
+    item_first:'🩹 Kiidka gargaarka hore (tilmaamo leh)', item_blanket:'🛏️ Baashaalo',
+    item_whistle:'📯 Safaarad', item_cash:'💵 Lacag caddaan ah',
+    item_tools:'🔧 Qalab (dukumaal, miinad, carbaashan)', item_hygiene:'🧴 Agabka nadaafadda (jel, xaashi qoyan, brush…)',
+    item_id:'🪪 Koobiyada aqoonsiga & lambaryada muhiimka', item_keys:'🔑 Furayaasha kaydka (guri & baabuur)',
+    item_personal:'🎒 Walxaha shakhsiga',
     settings_title:'Dejinta', settings_emergency:'XIRIIRKA XAALADDA DEG-DEG',
     h_fire:'Dab demis / Ambalaas', h_council:'Golaha Maribyrnong',
     settings_lang_section:'LUUQADDA', settings_lang:'Beddel Luuqadda',
@@ -957,10 +997,14 @@ const T = {
     supply_title:'Supply Pack', supply_hero_t:'Ang Iyong Emergency Kit', supply_hero_s:'I-tap ang mga item upang markahan bilang handa',
     supply_checklist:'CHECKLIST',
     item_map:'📋 Polyeto ng impormasyon sa baha', item_map2:'🗺️ Naka-print na mapa ng evacuation',
-    item_water:'💧 Tubig (3 araw na supply)', item_food:'🍱 Hindi nabubulok na pagkain',
-    item_torch:'🔦 Flashlight at baterya', item_radio:'📻 Battery na radyo',
-    item_first:'🩹 First aid kit', item_docs:'📄 Mahahalagang dokumento',
-    item_meds:'💊 Mga gamot (7 araw)', item_mascot:'🐻 Kard ng community mascot',
+    item_water:'💧 Tubig sa bote (3 L bawat tao/araw)', item_food:'🍱 Hindi nabubulok na pagkain (mani, de-lata, pinatuyo)',
+    item_radio:'📻 Battery na radyo', item_powerbank:'📱 Cellphone at power bank',
+    item_torch:'🔦 Flashlight at dagdag na baterya', item_candle:'🕯️ Kandila at posporo',
+    item_first:'🩹 First aid kit na may instruksyon', item_blanket:'🛏️ Mga kumot',
+    item_whistle:'📯 Sipol', item_cash:'💵 Cash',
+    item_tools:'🔧 Mga kagamitan (martilyo, lagari, sipit)', item_hygiene:'🧴 Mga pansariling gamit (gel, wet wipes, toothbrush…)',
+    item_id:'🪪 Kopya ng ID at mahahalagang numero', item_keys:'🔑 Spare keys (bahay at sasakyan)',
+    item_personal:'🎒 Mga personal na gamit',
     settings_title:'Settings', settings_emergency:'MGA EMERGENCY CONTACT',
     h_fire:'Sunog / Ambulansya', h_council:'Konseho ng Maribyrnong',
     settings_lang_section:'WIKA', settings_lang:'Baguhin ang Wika',
